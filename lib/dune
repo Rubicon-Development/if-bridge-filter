@@ -10,4 +10,4 @@
  (deps modbus_filter.bpf.c modbus_filter.h)
  (action
   (bash
-   "arch=$(uname -m | sed 's/x86_64/x86/' | sed 's/arm.*/arm/' | sed 's/aarch64/arm64/' | sed 's/ppc64le/powerpc/' | sed 's/mips.*/mips/' | sed 's/riscv64/riscv/' | sed 's/loongarch64/loongarch/'); multiarch=$(gcc -dumpmachine); ${CLANG_BPF:-clang-19} -g -O2 -target bpf -D__TARGET_ARCH_${arch} -I/usr/include/${multiarch} $(pkg-config --cflags libbpf) -c modbus_filter.bpf.c -o modbus_filter.bpf.o")))
+   "arch=$(uname -m | sed 's/x86_64/x86/' | sed 's/arm.*/arm/' | sed 's/aarch64/arm64/' | sed 's/ppc64le/powerpc/' | sed 's/mips.*/mips/' | sed 's/riscv64/riscv/' | sed 's/loongarch64/loongarch/'); multiarch=$(gcc -print-multiarch 2>/dev/null || true); if [ -z \"$multiarch\" ]; then multiarch=$(gcc -dumpmachine); fi; asm_inc=; for d in /usr/include/$multiarch /usr/include/aarch64-linux-gnu /usr/include/arm-linux-gnueabihf; do if [ -r \"$d/asm/types.h\" ]; then asm_inc=\"-I$d\"; break; fi; done; ${CLANG_BPF:-clang-19} -g -O2 -target bpf -D__TARGET_ARCH_${arch} $asm_inc $(pkg-config --cflags libbpf) -c modbus_filter.bpf.c -o modbus_filter.bpf.o")))
