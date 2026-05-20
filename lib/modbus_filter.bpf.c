@@ -117,8 +117,8 @@ int modbus_filter_ingress(struct __sk_buff *ctx) {
 
   policy = bpf_map_lookup_elem(&policy_map, &key0);
   if (!policy || ip->saddr != policy->src_ip || ip->daddr != policy->dst_ip) {
-    bump_counter(COUNTER_POLICY_MISS_DROPPED);
-    return TC_ACT_SHOT;
+    bump_counter(COUNTER_POLICY_MISS_ALLOWED);
+    return TC_ACT_OK;
   }
 
   payload = (void *)tcp + (tcp->doff * 4);
