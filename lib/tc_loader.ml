@@ -51,6 +51,11 @@ let setup_tc interface =
 
 let attach_one ~obj ~interface =
   let tc_hook, tc_opts = setup_tc interface in
+  let ensure_clsact () =
+    let cmd = Printf.sprintf "tc qdisc replace dev %s clsact >/dev/null 2>&1" interface in
+    ignore (Sys.command cmd)
+  in
+  ensure_clsact ();
   ignore (C.Functions.bpf_tc_hook_destroy (addr tc_hook));
   let created = C.Functions.bpf_tc_hook_create (addr tc_hook) = 0 in
   let prog = bpf_object_find_program_by_name obj "modbus_filter_ingress" in
