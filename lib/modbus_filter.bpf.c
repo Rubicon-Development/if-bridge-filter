@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 
-#include "vmlinux.h"
+#include <linux/types.h>
+#include <linux/bpf.h>
+#include <linux/if_ether.h>
+#include <linux/if_vlan.h>
+#include <linux/ip.h>
+#include <linux/pkt_cls.h>
+#include <linux/tcp.h>
 #include <bpf/bpf_endian.h>
 #include <bpf/bpf_helpers.h>
 #include "modbus_filter.h"
