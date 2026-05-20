@@ -1,0 +1,4 @@
+(executable
+ (public_name if-bridge-filter)
+ (name main)
+ (libraries if_bridge_filter ipaddr))

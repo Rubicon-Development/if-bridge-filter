@@ -1,0 +1,22 @@
+(library
+ (name if_bridge_filter)
+ (modules if_bridge_filter tc_loader)
+ (libraries libbpf ctypes ctypes.foreign unix ipaddr))
+
+(rule
+ (mode
+  (promote (until-clean)))
+ (targets modbus_filter.bpf.o)
+ (deps vmlinux.h modbus_filter.bpf.c modbus_filter.h)
+ (action
+  (bash
+   "arch=$(uname -m | sed 's/x86_64/x86/' | sed 's/arm.*/arm/' | sed 's/aarch64/arm64/' | sed 's/ppc64le/powerpc/' | sed 's/mips.*/mips/' | sed 's/riscv64/riscv/' | sed 's/loongarch64/loongarch/'); ${CLANG_BPF:-clang-19} -g -O2 -target bpf -D__TARGET_ARCH_${arch} $(pkg-config --cflags libbpf) -c modbus_filter.bpf.c -o modbus_filter.bpf.o")))
+
+(rule
+ (mode
+  (promote (until-clean)))
+ (targets vmlinux.h)
+ (action
+  (with-stdout-to
+   vmlinux.h
+   (run bpftool btf dump file /sys/kernel/btf/vmlinux format c))))
