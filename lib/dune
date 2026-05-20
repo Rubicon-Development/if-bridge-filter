@@ -10,4 +10,4 @@
  (deps modbus_filter.bpf.c modbus_filter.h)
  (action
   (bash
-   "arch=$(uname -m | sed 's/x86_64/x86/' | sed 's/arm.*/arm/' | sed 's/aarch64/arm64/' | sed 's/ppc64le/powerpc/' | sed 's/mips.*/mips/' | sed 's/riscv64/riscv/' | sed 's/loongarch64/loongarch/'); ${CLANG_BPF:-clang-19} -g -O2 -target bpf -D__TARGET_ARCH_${arch} $(pkg-config --cflags libbpf) -c modbus_filter.bpf.c -o modbus_filter.bpf.o")))
+   "arch=$(uname -m | sed 's/x86_64/x86/' | sed 's/arm.*/arm/' | sed 's/aarch64/arm64/' | sed 's/ppc64le/powerpc/' | sed 's/mips.*/mips/' | sed 's/riscv64/riscv/' | sed 's/loongarch64/loongarch/'); multiarch=$(gcc -dumpmachine); ${CLANG_BPF:-clang-19} -g -O2 -target bpf -D__TARGET_ARCH_${arch} -I/usr/include/${multiarch} $(pkg-config --cflags libbpf) -c modbus_filter.bpf.c -o modbus_filter.bpf.o")))
