@@ -17,6 +17,5 @@
   (promote (until-clean)))
  (targets vmlinux.h)
  (action
-  (with-stdout-to
-   vmlinux.h
-   (run bpftool btf dump file /sys/kernel/btf/vmlinux format c))))
+  (bash
+   "set -eu; btf_file=${VMLINUX_BTF:-}; if [ -n \"$btf_file\" ] && [ -r \"$btf_file\" ]; then bpftool btf dump file \"$btf_file\" format c > vmlinux.h; exit 0; fi; if [ -r /sys/kernel/btf/vmlinux ]; then bpftool btf dump file /sys/kernel/btf/vmlinux format c > vmlinux.h; exit 0; fi; if [ -r /boot/vmlinux-$(uname -r) ]; then bpftool btf dump file /boot/vmlinux-$(uname -r) format c > vmlinux.h; exit 0; fi; echo 'Error: could not find kernel BTF.' >&2; echo 'Tried: VMLINUX_BTF, /sys/kernel/btf/vmlinux, /boot/vmlinux-$(uname -r)' >&2; echo 'Provide one with: VMLINUX_BTF=/path/to/vmlinux.btf dune build' >&2; exit 1")))
