@@ -20,6 +20,11 @@
 #define IPPROTO_TCP 6
 #define MODBUS_PORT 502
 
+struct vlan_hdr {
+  __be16 h_vlan_TCI;
+  __be16 h_vlan_encapsulated_proto;
+};
+
 struct {
   __uint(type, BPF_MAP_TYPE_ARRAY);
   __uint(max_entries, 1);
