@@ -60,7 +60,7 @@ let attach_one ~obj ~interface =
   let created = C.Functions.bpf_tc_hook_create (addr tc_hook) = 0 in
   let prog = bpf_object_find_program_by_name obj "modbus_filter_ingress" in
   setf tc_opts C.Types.Bpf_tc.Opts.prog_fd prog.fd;
-  setf tc_opts C.Types.Bpf_tc.Opts.flags (Unsigned.UInt32.of_int 1);
+  setf tc_opts C.Types.Bpf_tc.Opts.flags Unsigned.UInt32.zero;
   let err = C.Functions.bpf_tc_attach (addr tc_hook) (addr tc_opts) in
   if err <> 0
   then (
